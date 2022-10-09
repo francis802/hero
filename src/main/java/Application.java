@@ -11,7 +11,9 @@ public class Application {
     public static void main(String[] args) throws IOException {
         Screen screen = null;
         try {
-            Terminal terminal = new DefaultTerminalFactory().createTerminal();
+            TerminalSize terminalSize = new TerminalSize(40, 20);
+            DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
+            Terminal terminal = terminalFactory.createTerminal();
             screen = new TerminalScreen(terminal);
             screen.setCursorPosition(null); // we don't need a cursor
             screen.startScreen(); // screens must be started
@@ -19,9 +21,6 @@ public class Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        TerminalSize terminalSize = new TerminalSize(40, 20);
-        DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
-        Terminal terminal = terminalFactory.createTerminal();
         screen.clear();
         screen.setCharacter(10, 10, TextCharacter.fromCharacter('X')[0]);
         screen.refresh();
