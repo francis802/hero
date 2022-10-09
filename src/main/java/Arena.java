@@ -1,18 +1,37 @@
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.screen.Screen;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Arena {
-    private int height = 20;
-    private int width = 40;
-    private Hero hero = new Hero(10,10);
+    private int height;
+    private int width;
+    private Hero hero;
+    private List<Wall> walls;
 
+    private List<Wall> createWalls() {
+        List<Wall> walls = new ArrayList<>();
+        for (int c = 0; c < width; c++) {
+            walls.add(new Wall(c, 0));
+            walls.add(new Wall(c, height - 1));
+        }
+        for (int r = 1; r < height - 1; r++) {
+            walls.add(new Wall(0, r));
+            walls.add(new Wall(width - 1, r));
+        }
+        return walls;
+    }
+    public Arena() {
+        this.height = 20;
+        this.width = 40;
+        this.hero = new Hero(10,10);
+        this.walls = createWalls();
+    }
     public void processKey(KeyStroke key){
         switch(key.getKeyType()){
             case ArrowUp: {
@@ -39,7 +58,7 @@ public class Arena {
     }
 
     private boolean canHeroMove(Position position){
-        if (position.getX()<width && position.getX()>=0 && position.getY()<height && position.getY()>=0)
+        if (position.getX()<width-1 && position.getX()>=1 && position.getY()<height-1 && position.getY()>=1)
             return true;
         return false;
     }
@@ -52,6 +71,8 @@ public class Arena {
     public void draw(TextGraphics graphics) throws IOException {
         graphics.setBackgroundColor(TextColor.Factory.fromString("#336699"));
         graphics.fillRectangle(new TerminalPosition(0, 0), new TerminalSize(width, height), ' ');
+        for (Wall wall : walls)
+            wall.draw(graphics);
         hero.draw(graphics);
     }
 }
