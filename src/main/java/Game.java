@@ -13,8 +13,7 @@ public class Game {
     private Screen screen = null;
     private int screenCols = 40;
     private int screenRows = 20;
-    private int x = 10;
-    private int y = 10;
+    private Hero hero = new Hero(10,10);
 
     public Game() throws IOException {
         try {
@@ -42,26 +41,26 @@ public class Game {
 
     private void draw() throws IOException {
         screen.clear();
-        screen.setCharacter(x, y, TextCharacter.fromCharacter('X')[0]);
+        hero.draw(screen);
         screen.refresh();
     }
 
     private void processKey(com.googlecode.lanterna.input.KeyStroke key) {
         switch(key.getKeyType()){
             case ArrowUp: {
-                y--;
+                hero.moveUp();
                 break;
             }
             case ArrowDown: {
-                y++;
+                hero.moveDown();
                 break;
             }
             case ArrowRight: {
-                x++;
+                hero.moveRight();
                 break;
             }
             case ArrowLeft: {
-                x--;
+                hero.moveLeft();
                 break;
             }
         }
