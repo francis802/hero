@@ -1,5 +1,4 @@
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -11,13 +10,11 @@ import java.io.IOException;
 
 public class Game {
     private Screen screen = null;
-    private int screenCols = 40;
-    private int screenRows = 20;
-    private Hero hero = new Hero(10,10);
+    private Arena arena = new Arena();
 
     public Game() throws IOException {
         try {
-            TerminalSize terminalSize = new TerminalSize(screenCols, screenRows);
+            TerminalSize terminalSize = new TerminalSize(arena.getWidth(), arena.getHeight());
             DefaultTerminalFactory terminalFactory = new DefaultTerminalFactory().setInitialTerminalSize(terminalSize);
             Terminal terminal = terminalFactory.createTerminal();
             screen = new TerminalScreen(terminal);
@@ -41,32 +38,11 @@ public class Game {
 
     private void draw() throws IOException {
         screen.clear();
-        hero.draw(screen);
+        arena.draw(screen);
         screen.refresh();
     }
 
-    private void moveHero(Position position) {
-        hero.setPosition(position);
-    }
-
     private void processKey(com.googlecode.lanterna.input.KeyStroke key) {
-        switch(key.getKeyType()){
-            case ArrowUp: {
-                moveHero(hero.moveUp());
-                break;
-            }
-            case ArrowDown: {
-                moveHero(hero.moveDown());
-                break;
-            }
-            case ArrowRight: {
-                moveHero(hero.moveRight());
-                break;
-            }
-            case ArrowLeft: {
-                moveHero(hero.moveLeft());
-                break;
-            }
-        }
+        arena.processKey(key);
     }
 }
